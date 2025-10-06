@@ -2,15 +2,11 @@ package DB
 
 import (
 	"expenses-tracker.com/IO"
-	"fmt"
 )
 
 func GetAllTransactions() ([]IO.TransactionOutput, error) {
 	dbCon := createDBConnection()
-	defer (func() {
-		fmt.Println("Closing conection for get all query")
-		dbCon.Close() //Se debe hacer esto cada vez que se cree una coneccion a la Base de Datos
-	})()
+	defer dbCon.Close()
 
 	var trans []IO.TransactionOutput
 	transactionsRows, err := dbCon.Query("SELECT * FROM transactions;") //Las querys podrian estar en un file a parte.
@@ -33,15 +29,10 @@ func GetAllTransactions() ([]IO.TransactionOutput, error) {
 	return trans, nil
 }
 
-//INSERT INTO transactions (description, amount) VALUES ('Bonificación por rendimiento', 500.00);
-
 func CreateTransaction(description string, amount float32) error {
 	dbCon := createDBConnection()
-	defer (func() {
-		fmt.Println("Closing conection for create query")
-		dbCon.Close() //Se debe hacer esto cada vez que se cree una coneccion a la Base de Datos
-	})()
-
+	defer dbCon.Close()
+	
 	_, insertError := dbCon.Exec(`INSERT INTO transactions (description, amount) VALUES ($1, $2);`, description, amount)
 
 	if insertError != nil {
@@ -53,10 +44,7 @@ func CreateTransaction(description string, amount float32) error {
 
 func DeleteTransactionById(id uint64) (int64, error) {
 	dbCon := createDBConnection()
-	defer (func() {
-		fmt.Println("Closing conection for delete query")
-		dbCon.Close() //Se debe hacer esto cada vez que se cree una coneccion a la Base de Datos
-	})()
+	defer dbCon.Close()
 
 	res, deleteError := dbCon.Exec(`DELETE FROM transactions WHERE id = $1;`, id)
 
