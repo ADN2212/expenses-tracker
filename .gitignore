@@ -1,2 +1,5 @@
 .env
 server\DB\querys.sql
+client\.vscode
+client\node_modules
+client\public

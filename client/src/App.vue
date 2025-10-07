@@ -1,6 +1,12 @@
 <template>
   <Header></Header>
   <div class="container">
+
+    
+  {{ data }}
+  {{ error }}
+  {{ loading }}
+
     <Balance :total="+total"/>
     <!-- +"3" = 3 -->
     <IncomeExpenses :income="+income" :expense="+expense" />
@@ -18,9 +24,13 @@ import TransactionList from './components/TransactionList.vue';
 import AddTransaction from './components/AddTransaction.vue';
 import { ref, computed, onMounted, watch} from 'vue';
 import { useToast } from 'vue-toastification';
-const toast = useToast()
+import { useAPI } from './composables/useAPI';
 
+const toast = useToast()
 const transactions = ref([])
+
+const {data, error, loading, getAllTransactions} = useAPI('http://localhost:8080/')
+
 //Sera reactivo al value de transactions, es decir, cuando la lista cambie este valor tambien cambiara.
 const total = computed(() => {
   return transactions.value.reduce((acc, t) => acc + t.amount, 0) 
@@ -42,47 +52,18 @@ const expense = computed(() => {
 
 //Lo que esta en el argumento de la lambda es la data que se envia "a traves" del evento
 const addTrans = (transData) => {
-  console.log('A new transaction was added')  
-  //console.log(transData)
-  transactions.value.push(
-    {
-      id: createId(),
-      text: transData.text,
-      amount: transData.amount 
-    }  
-  )
-  toast.success("A new trasnaction was added!")    
-  console.log(transactions.value)
-}
-
-function createId() {
-  return Math.floor(Math.random() * 1000000)
+  console.log('Call the API to add transaction ...')  
 }
 
 //Esta funcion se ejecuta cuando se ejecuta el evento.
 const deleteTrans = (id) => {
-  //console.log(`Deleting trans of id = ${id}`)
-  transactions.value = transactions.value.filter(t => t.id !== id)
-  toast.success(`Trans of id = ${id} deleted`)
+  console.log("Call the API to delete transaction ...")
 }
 
 //Optener los datos del local storage:
 onMounted(() => {
-  const savedTransactions = JSON.parse(localStorage.getItem('transactions'))
-  console.log(savedTransactions)
-  if (savedTransactions) {
-    console.log('They were transactions')
-    transactions.value = savedTransactions
-    return
-  }
-  console.log('They were not transactions')
+  console.log('Get trans-actions from API.')
+  getAllTransactions('/transactions')
 })
-
-//Este se ejecuta cade vez que array de transacsiones cambie
-//En el video tutotial esto se hizo de otra forma.
-watch(transactions, () => {
-  console.log('Updating trans arrays in local storage')
-  localStorage.setItem('transactions', JSON.stringify(transactions.value))
-}, {deep: true})//El deep permite que el escuche todos los cambios.
 
 </script>
