@@ -1,6 +1,9 @@
 <template>
 	<h3>History</h3>
-	<ul id="list" class="list">
+	<p v-if="loading">
+		Cargando transactiones ...
+	</p>
+	<ul v-else id="list" class="list">
 		<li v-for="t in transactions" v-bind="t.id" v-bind:class="t.amount > 0 ? 'plus': 'minus'">
 			{{ t.description }} <span>${{ t.amount }}</span>
 			<button 
@@ -18,10 +21,16 @@ import { defineProps } from 'vue';
 const emit = defineEmits(['trans-deleted'])
 
 const props = defineProps(
-	{transactions: {
+	{
+	transactions: {
 		type: Array,
 		required: true	
-	}}	
+	},
+	loading: {
+		type: Boolean,
+		required: true
+	}
+}	
 )
 
 function emitTransDeleteion(id) {

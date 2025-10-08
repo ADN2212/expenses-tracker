@@ -4,7 +4,7 @@
     <Balance :total="+total"/>
     <!-- +"3" = 3 -->
     <IncomeExpenses :income="+income" :expense="+expense" />
-    <TransactionList :transactions="transactions" @trans-deleted="deleteTrans"/>
+    <TransactionList :transactions="transactions" @trans-deleted="deleteTrans" :loading="loading"/>
     <!--@eventName agrega un event listener que ejeuca la funcion al lado del igual-->
     <AddTransaction @trans-added="addTrans" />
   </div>
@@ -19,34 +19,36 @@ import AddTransaction from './components/AddTransaction.vue';
 import { ref, computed, onMounted, watch} from 'vue';
 import { useToast } from 'vue-toastification';
 import { useAPI } from './composables/useAPI';
-
 const toast = useToast()
-//const transactions = ref([])
 
+//Que hacer con este error ???
 const {transactions, error, loading, getAllTransactions} = useAPI()
 
-//Sera reactivo al value de transactions, es decir, cuando la lista cambie este valor tambien cambiara.
-// const total = computed(() => {
-//   return transactions.value.reduce((acc, t) => acc + t.amount, 0) 
-// })
+const total = computed(() => {  
+  if (transactions.value) {
+    return transactions.value.reduce((acc, t) => acc + t.amount, 0)
+  }
+  return 0
+})
 
-const total = 0
-const income = 0
-const expense = 0
-
-//Sumar solo el income, es decir las cantidades positivas:
-// const income = computed(() => {
-//   return transactions.value.filter(t => t.amount > 0).reduce(
-//     (acc, t) => acc + t.amount, 0
-//   )
-// })
+const income = computed(() => {
+  if (transactions.value) {
+    return transactions.value.filter(t => t.amount > 0).reduce(
+      (acc, t) => acc + t.amount, 0
+    )
+  }
+  return 0
+})
 
 //Sumar solo los gastos:
-// const expense = computed(() => {
-//   return transactions.value.filter(t => t.amount < 0).reduce(
-//     (acc, t) => acc + t.amount, 0
-//   )
-// })
+const expense = computed(() => {
+  if (transactions.value) {
+    return transactions.value.filter(t => t.amount < 0).reduce(
+      (acc, t) => acc + t.amount, 0
+    )
+  }
+  return 0
+})
 
 //Lo que esta en el argumento de la lambda es la data que se envia "a traves" del evento
 const addTrans = (transData) => {
