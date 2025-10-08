@@ -1,12 +1,6 @@
 <template>
   <Header></Header>
   <div class="container">
-
-    
-  {{ data }}
-  {{ error }}
-  {{ loading }}
-
     <Balance :total="+total"/>
     <!-- +"3" = 3 -->
     <IncomeExpenses :income="+income" :expense="+expense" />
@@ -27,28 +21,32 @@ import { useToast } from 'vue-toastification';
 import { useAPI } from './composables/useAPI';
 
 const toast = useToast()
-const transactions = ref([])
+//const transactions = ref([])
 
-const {data, error, loading, getAllTransactions} = useAPI('http://localhost:8080/')
+const {transactions, error, loading, getAllTransactions} = useAPI()
 
 //Sera reactivo al value de transactions, es decir, cuando la lista cambie este valor tambien cambiara.
-const total = computed(() => {
-  return transactions.value.reduce((acc, t) => acc + t.amount, 0) 
-})
+// const total = computed(() => {
+//   return transactions.value.reduce((acc, t) => acc + t.amount, 0) 
+// })
+
+const total = 0
+const income = 0
+const expense = 0
 
 //Sumar solo el income, es decir las cantidades positivas:
-const income = computed(() => {
-  return transactions.value.filter(t => t.amount > 0).reduce(
-    (acc, t) => acc + t.amount, 0
-  )
-})
+// const income = computed(() => {
+//   return transactions.value.filter(t => t.amount > 0).reduce(
+//     (acc, t) => acc + t.amount, 0
+//   )
+// })
 
 //Sumar solo los gastos:
-const expense = computed(() => {
-  return transactions.value.filter(t => t.amount < 0).reduce(
-    (acc, t) => acc + t.amount, 0
-  )
-})
+// const expense = computed(() => {
+//   return transactions.value.filter(t => t.amount < 0).reduce(
+//     (acc, t) => acc + t.amount, 0
+//   )
+// })
 
 //Lo que esta en el argumento de la lambda es la data que se envia "a traves" del evento
 const addTrans = (transData) => {
@@ -61,9 +59,8 @@ const deleteTrans = (id) => {
 }
 
 //Optener los datos del local storage:
-onMounted(() => {
-  console.log('Get trans-actions from API.')
-  getAllTransactions('/transactions')
+onMounted(async () => {
+  getAllTransactions()
 })
 
 </script>

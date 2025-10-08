@@ -1,27 +1,18 @@
 import { ref } from 'vue'
-import axios from 'axios'
 
-export function useAPI(baseURL) {
+const BASE_URL = 'http://localhost:8080/transactions'
 
-    const data = ref(null)
+export function useAPI() {
+    const transactions = ref(null)
     const error = ref(null)
     const loading = ref(false)
-
-    const api = axios.create({
-        baseURL,
-        timeout: 10000,//A que se refiere esto ???
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'Content-Type': 'application/json'
-        }     
-    })
-
-    const getAllTransactions = async (endpoint) => {
+    
+    const getAllTransactions = async () => {
         loading.value = true
         error.value = null
-        try {
-            const res = await api.get(endpoint)
-            data.value = res.data
+        try {   
+            const response = await fetch(BASE_URL)  
+            transactions.value = await response.json() 
         } catch (err) {
             error.value = err
         } finally {
@@ -29,5 +20,5 @@ export function useAPI(baseURL) {
         }
     }
 
-    return {data, error, loading, getAllTransactions}
+    return {transactions, error, loading, getAllTransactions}
 }

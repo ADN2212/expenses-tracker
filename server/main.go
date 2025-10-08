@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"os"
-	"time"
 )
 
 func init() {
@@ -26,6 +25,7 @@ func main() {
 	}
 
 	router := gin.Default()
+	router.Use(cors.Default())//No recomendado
 	//Transaction endpoints:
 	router.GET("transactions", enpoints.GetTransactions)
 	router.POST("transactions", enpoints.AddTransaction)
@@ -38,22 +38,6 @@ func main() {
 		port = "8080"
 	}
 
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET", "POST", "DELETE"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			res := origin == "http://localhost:5173"
-			fmt.Println("-----------------------------")
-			fmt.Println(origin)			
-			fmt.Println(res)
-			fmt.Println("-----------------------------")
-			return res
-		},
-		MaxAge: 10 * time.Second,
-	}))
-
+	
 	router.Run(fmt.Sprintf("localhost:%s", port))
 }

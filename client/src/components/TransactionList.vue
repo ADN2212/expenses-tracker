@@ -2,7 +2,7 @@
 	<h3>History</h3>
 	<ul id="list" class="list">
 		<li v-for="t in transactions" v-bind="t.id" v-bind:class="t.amount > 0 ? 'plus': 'minus'">
-			{{ t.text }} <span>${{ t.amount }}</span>
+			{{ t.description }} <span>${{ t.amount }}</span>
 			<button 
 				@click="emitTransDeleteion(t.id)"
 				class="delete-btn"> 
