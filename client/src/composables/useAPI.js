@@ -7,12 +7,13 @@ export function useAPI() {
     const error = ref(null)
     const loadingTransactions = ref(false)
 
+
     const getAllTransactions = async () => {
         loadingTransactions.value = true
         error.value = null
-        try {   
-            const response = await fetch(BASE_URL)  
-            transactions.value = await response.json() 
+        try {
+            const response = await fetch(BASE_URL)
+            transactions.value = await response.json()
         } catch (err) {
             error.value = err
         } finally {
@@ -20,5 +21,32 @@ export function useAPI() {
         }
     }
 
-    return {transactions, error, loadingTransactions, getAllTransactions}
+    const loadingPost = ref(false)
+    const postError = ref(null)
+
+    const postTransaction = async (newTrans) => {
+        loadingPost.value = true
+        try {
+            await fetch(BASE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newTrans)
+            })
+        } catch (err) {
+            postError.value = err.message
+        }
+        loadingPost.value = false
+    }
+
+    return {
+        transactions,
+        error,
+        loadingTransactions,
+        getAllTransactions,
+        loadingPost,
+        postError,
+        postTransaction
+    }
 }

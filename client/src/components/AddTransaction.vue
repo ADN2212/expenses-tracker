@@ -1,5 +1,8 @@
 <template>
-    <form id="form" @submit.prevent="onSubmit">
+    <p v-if="loading">
+        Sending Transaction ...
+    </p>
+    <form v-else id="form" @submit.prevent="onSubmit">
         <div class="form-control">
             <label for="text">Text</label>
             <input v-model="text" type="text" id="text" placeholder="Enter text..." />
@@ -20,16 +23,22 @@ import { useToast } from 'vue-toastification';
 const text = ref('')
 const amount = ref('')
 const toast = useToast()
+
+const props = defineProps(
+	{
+	loading: {
+		type: Boolean,
+		required: true
+	}
+})	
+
 const emit = defineEmits(['trans-added'])
 
 
 const onSubmit = () => {
     console.log(`${text.value} = ${amount.value}`)
-    //    
     if (!text.value || !amount.value) {
         toast.error('You must fill all fields')
-        // text.value = "Fuck"
-        // amount.value = "You"
         return
     }
 

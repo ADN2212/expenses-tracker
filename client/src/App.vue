@@ -6,7 +6,7 @@
     <IncomeExpenses :income="+income" :expense="+expense" />
     <TransactionList :transactions="transactions" @trans-deleted="deleteTrans" :loading="loadingTransactions"/>
     <!--@eventName agrega un event listener que ejeuca la funcion al lado del igual-->
-    <AddTransaction @trans-added="addTrans" />
+    <AddTransaction @trans-added="addTrans" :loading = "loadingPost"  />
   </div>
 </template>
 
@@ -21,8 +21,16 @@ import { useToast } from 'vue-toastification';
 import { useAPI } from './composables/useAPI';
 const toast = useToast()
 
-//Que hacer con este error ???
-const {transactions, error, loadingTransactions, getAllTransactions} = useAPI()
+
+const {
+    transactions, 
+    error, //Que hacer con este error ???
+    loadingTransactions, 
+    getAllTransactions,
+    loadingPost,
+    postError,//Que hacer con este error ???
+    postTransaction
+  } = useAPI()
 
 const total = computed(() => {  
   if (transactions.value) {
@@ -51,8 +59,18 @@ const expense = computed(() => {
 })
 
 //Lo que esta en el argumento de la lambda es la data que se envia "a traves" del evento
-const addTrans = (transData) => {
+const addTrans = async (transData) => {
   console.log('Call the API to add transaction ...')  
+  const newTrans = {
+   "description": transData.text,
+    "amount": transData.amount
+  }
+
+  //Hay alguna forma correcta de no usar el await aqui ????
+  await postTransaction(newTrans)
+  toast.success("Transaction Added")
+  await getAllTransactions()
+
 }
 
 //Esta funcion se ejecuta cuando se ejecuta el evento.
