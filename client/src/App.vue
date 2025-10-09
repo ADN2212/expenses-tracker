@@ -4,7 +4,7 @@
     <Balance :total="+total"/>
     <!-- +"3" = 3 -->
     <IncomeExpenses :income="+income" :expense="+expense" />
-    <TransactionList :transactions="transactions" @trans-deleted="deleteTrans" :loading="loading"/>
+    <TransactionList :transactions="transactions" @trans-deleted="deleteTrans" :loading="loadingTransactions"/>
     <!--@eventName agrega un event listener que ejeuca la funcion al lado del igual-->
     <AddTransaction @trans-added="addTrans" />
   </div>
@@ -22,7 +22,7 @@ import { useAPI } from './composables/useAPI';
 const toast = useToast()
 
 //Que hacer con este error ???
-const {transactions, error, loading, getAllTransactions} = useAPI()
+const {transactions, error, loadingTransactions, getAllTransactions} = useAPI()
 
 const total = computed(() => {  
   if (transactions.value) {
