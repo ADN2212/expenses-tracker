@@ -29,21 +29,28 @@ const toast = useToast()
 
 const {
     transactions, 
-    error, //Que hacer con este error ???
+    error,
     loadingTransactions, 
     getAllTransactions,
     loadingPost,
-    postError,//Que hacer con este error ???
+    postError,
     postTransaction,
     loadingDelete,
     deleteError,
     deleteTransaction
   } = useAPI()
 
+watch(() => error.value, () => {
+  toast.error(error.value)
+})
+
+watch(() => postError.value, () => {
+  toast.error(postError.value)
+})
+
 watch(() => deleteError.value, () =>  {
   toast.error(deleteError.value)
 })
-
 
 const total = computed(() => {  
   if (transactions.value) {

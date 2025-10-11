@@ -56,7 +56,7 @@ export function useAPI() {
             if (responseStatus >= 400 && responseStatus <= 599) {
                 deleteError.value = "Someting went wrong while deleting"
             }
-            
+
         //Ojo: Si a API responde con un 400 o 500 el bloque del cacth no se va a ejecutar.
         } catch (err) {
             console.log(err.message)
