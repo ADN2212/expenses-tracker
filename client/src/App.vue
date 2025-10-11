@@ -1,9 +1,16 @@
 <template>
   <Header></Header>
   <div class="container">
+    {{ loadingDelete }}
+    {{ deleteError }}
     <Balance :total="+total"/>
     <IncomeExpenses :income="+income" :expense="+expense" />
-    <TransactionList :transactions="transactions" @trans-deleted="deleteTrans" :loading="loadingTransactions"/>
+    <TransactionList 
+      :transactions="transactions" 
+      @trans-deleted="deleteTrans" 
+      :loading="loadingTransactions"
+      :loadingDelete="loadingDelete"
+      />
     <AddTransaction @trans-added="addTrans" :loading = "loadingPost"  />
   </div>
 </template>
@@ -14,7 +21,7 @@ import Balance from './components/Balance.vue';
 import IncomeExpenses from './components/IncomeExpenses.vue';
 import TransactionList from './components/TransactionList.vue';
 import AddTransaction from './components/AddTransaction.vue';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch} from 'vue';
 import { useToast } from 'vue-toastification';
 import { useAPI } from './composables/useAPI';
 const toast = useToast()
@@ -27,8 +34,16 @@ const {
     getAllTransactions,
     loadingPost,
     postError,//Que hacer con este error ???
-    postTransaction
+    postTransaction,
+    loadingDelete,
+    deleteError,
+    deleteTransaction
   } = useAPI()
+
+watch(() => deleteError.value, () =>  {
+  toast.error(deleteError.value)
+})
+
 
 const total = computed(() => {  
   if (transactions.value) {
@@ -67,8 +82,10 @@ const addTrans = async (transData) => {
 
 }
 
-const deleteTrans = (id) => {
-  console.log("Call the API to delete transaction ...")
+const deleteTrans = async (id) => {
+  console.log(`Call the API to delete transaction id = ${id}`)
+  await deleteTransaction(id)
+  await getAllTransactions()
 }
 
 onMounted(async () => {

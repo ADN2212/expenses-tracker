@@ -6,7 +6,8 @@
 	<ul v-else id="list" class="list">
 		<li v-for="t in transactions" v-bind="t.id" v-bind:class="t.amount > 0 ? 'plus': 'minus'">
 			{{ t.description }} <span>${{ t.amount }}</span>
-			<button 
+			<button
+				:disabled="loadingDelete" 
 				@click="emitTransDeleteion(t.id)"
 				class="delete-btn"> 
 				delete 
@@ -27,6 +28,10 @@ const props = defineProps(
 		required: true	
 	},
 	loading: {
+		type: Boolean,
+		required: true
+	}, 
+	loadingDelete: {
 		type: Boolean,
 		required: true
 	}
