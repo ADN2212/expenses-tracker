@@ -44,22 +44,14 @@ const onSubmit = () => {
 
     const transData = {
         text: text.value,
-        amount: parseFloat(amount.value)//Falta validar que el valor agragado sea parsable a float
+        amount: parseFloat(amount.value)
     }
 
-    //Esto emite el evento con los datos dados,
-    //permitieendo que se puedan capturar desde fuera del componete.
-    emit('trans-added', transData)
-    
+    emit('trans-added', transData)    
     text.value = ""
     amount.value = ""
 
 }
-
-//Agregar un wathc de esta manera es como escuchar el envento "onChange"
-// watch(text, () => {
-//     console.log(text.value)
-// })
 
 </script>
 

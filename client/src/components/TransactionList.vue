@@ -34,7 +34,6 @@ const props = defineProps(
 )
 
 function emitTransDeleteion(id) {
-	console.log('Sending event to delete trans')
 	emit('trans-deleted', id)
 }
 
