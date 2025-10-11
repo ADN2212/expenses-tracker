@@ -1,8 +1,7 @@
 <template>
   <Header></Header>
   <div class="container">
-    {{ loadingDelete }}
-    {{ deleteError }}
+    
     <Balance :total="+total"/>
     <IncomeExpenses :income="+income" :expense="+expense" />
     <TransactionList 

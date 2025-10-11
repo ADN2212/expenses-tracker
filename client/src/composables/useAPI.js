@@ -2,11 +2,13 @@ import { ref } from 'vue'
 
 const BASE_URL = 'http://localhost:8080/transactions'
 
+console.log(import.meta.env.BASE_URL)
+
 export function useAPI() {
+
     const transactions = ref(null)
     const error = ref(null)
     const loadingTransactions = ref(false)
-
 
     const getAllTransactions = async () => {
         loadingTransactions.value = true
@@ -15,7 +17,7 @@ export function useAPI() {
             const response = await fetch(BASE_URL)
             transactions.value = await response.json()
         } catch (err) {
-            error.value = err
+            error.value = `Error while getting transactions: "${err.message}"`
         } finally {
             loadingTransactions.value = false
         }
@@ -35,7 +37,6 @@ export function useAPI() {
                 body: JSON.stringify(newTrans)
             })
         } catch (err) {
-            console.log(err.message)
             postError.value = err.message
         }
         loadingPost.value = false
