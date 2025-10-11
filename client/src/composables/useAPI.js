@@ -2,11 +2,9 @@ import { ref } from 'vue'
 
 const BASE_URL = 'http://localhost:8080/transactions'
 
-console.log(import.meta.env.BASE_URL)
-
 export function useAPI() {
 
-    const transactions = ref(null)
+    const transactions = ref([])
     const error = ref(null)
     const loadingTransactions = ref(false)
 

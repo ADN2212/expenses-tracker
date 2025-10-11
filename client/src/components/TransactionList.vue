@@ -3,17 +3,22 @@
 	<p v-if="loading">
 		Cargando transactiones ...
 	</p>
-	<ul v-else id="list" class="list">
-		<li v-for="t in transactions" v-bind="t.id" v-bind:class="t.amount > 0 ? 'plus': 'minus'">
-			{{ t.description }} <span>${{ t.amount }}</span>
-			<button
-				:disabled="loadingDelete" 
-				@click="emitTransDeleteion(t.id)"
-				class="delete-btn"> 
-				delete 
-			</button>
-		</li>
-	</ul>
+	<div v-else>
+		<div v-if="transactions.length === 0" >
+			You have no transactions yet
+		</div>	
+		<ul v-else ="list" class="list">
+			<li v-for="t in transactions" v-bind="t.id" v-bind:class="t.amount > 0 ? 'plus': 'minus'">
+				{{ t.description }} <span>${{ t.amount }}</span>
+				<button
+					:disabled="loadingDelete" 
+					@click="emitTransDeleteion(t.id)"
+					class="delete-btn"> 
+					delete 
+				</button>
+			</li>
+		</ul>
+	</div>
 </template>
 
 <script setup>
