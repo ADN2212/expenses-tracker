@@ -13,7 +13,7 @@ export function useAPI() {
         error.value = null
         try {
             const response = await fetch(BASE_URL)
-            transactions.value = await response.json()
+            transactions.value = await response.json() ?? []
         } catch (err) {
             error.value = `Error while getting transactions: "${err.message}"`
         } finally {

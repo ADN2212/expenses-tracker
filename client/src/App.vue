@@ -1,7 +1,7 @@
 <template>
   <Header></Header>
   <div class="container">
-    
+    {{ loadingTransactions }}
     <Balance :total="+total"/>
     <IncomeExpenses :income="+income" :expense="+expense" />
     <TransactionList 
