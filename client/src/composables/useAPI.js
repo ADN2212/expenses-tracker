@@ -25,17 +25,23 @@ export function useAPI() {
     const postError = ref(null)
 
     const postTransaction = async (newTrans) => {
+        postError.value = null
         loadingPost.value = true
         try {
-            await fetch(BASE_URL, {
+            const response = await fetch(BASE_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(newTrans)
             })
+            
+            const responseStatus = response.status
+            if (responseStatus >= 400 && responseStatus <= 599) {
+                postError.value = "Someting went wrong while posting request"
+            }
         } catch (err) {
-            postError.value = err.message
+            postError.value = `Error while posting transaction ${err.message}`
         }
         loadingPost.value = false
     }
@@ -46,16 +52,13 @@ export function useAPI() {
     const deleteTransaction = async (id) => {
         loadingDelete.value = true
         try {
-
             const response = await fetch(BASE_URL + "/" + id, {
                 method: "DELETE",
             })
-
             const responseStatus = response.status
             if (responseStatus >= 400 && responseStatus <= 599) {
                 deleteError.value = "Someting went wrong while deleting"
             }
-
         //Ojo: Si a API responde con un 400 o 500 el bloque del cacth no se va a ejecutar.
         } catch (err) {
             console.log(err.message)

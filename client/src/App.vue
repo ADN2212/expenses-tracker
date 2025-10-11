@@ -1,7 +1,6 @@
 <template>
   <Header></Header>
   <div class="container">
-    {{ loadingTransactions }}
     <Balance :total="+total"/>
     <IncomeExpenses :income="+income" :expense="+expense" />
     <TransactionList 
@@ -43,10 +42,6 @@ watch(() => error.value, () => {
   toast.error(error.value)
 })
 
-watch(() => postError.value, () => {
-  toast.error(postError.value)
-})
-
 watch(() => deleteError.value, () =>  {
   toast.error(deleteError.value)
 })
@@ -83,6 +78,12 @@ const addTrans = async (transData) => {
   }
 
   await postTransaction(newTrans)
+
+  if (postError.value) {
+    toast.error(postError.value)
+    return
+  }
+ 
   toast.success("Transaction Added")
   await getAllTransactions()
 

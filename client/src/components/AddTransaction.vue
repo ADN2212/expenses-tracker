@@ -34,9 +34,7 @@ const props = defineProps(
 
 const emit = defineEmits(['trans-added'])
 
-
 const onSubmit = () => {
-    console.log(`${text.value} = ${amount.value}`)
     if (!text.value || !amount.value) {
         toast.error('You must fill all fields')
         return
@@ -45,6 +43,11 @@ const onSubmit = () => {
     const transData = {
         text: text.value,
         amount: parseFloat(amount.value)
+    }
+
+    if (isNaN(transData.amount)) {
+        toast.error("Not valid amount")
+        return
     }
 
     emit('trans-added', transData)    

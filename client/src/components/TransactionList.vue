@@ -5,7 +5,7 @@
 	</p>
 	<div v-else>
 		<div v-if="transactions.length === 0" >
-			You have no transactions yet
+			There are no transactions here
 		</div>	
 		<ul v-else ="list" class="list">
 			<li v-for="t in transactions" v-bind="t.id" v-bind:class="t.amount > 0 ? 'plus': 'minus'">
